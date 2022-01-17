@@ -19,7 +19,6 @@ SPREADSHEET_ID = '1dqhR42Ml2zJUINaz3ysicH2Eo85U5BJW1-wmSI5AtzM'
 READ_RANGE_NAME = 'spring 2021!B2:N500'
 WRITE_RANGE_NAME = 'spring 2021!R2'
 
-
 def calc_office_hours(no_of_students):
     if(no_of_students>70):
         print("1\n")
@@ -80,7 +79,8 @@ def calc_load(data):
         share_factor = ((float)(row[9]))/100
         no_of_students = (float)(row[11])
         credits = (float)(row[10])
-        teaching_hours = (float)(calc_teaching_hours(row[5]))
+        teaching_hours = (float)(calc_teaching_hours(row[5], credits))
+        office_hours = (float)(calc_office_hours(no_of_students))
         preparation = (float)(calc_preparation(row[5]))
         if(row[5] == 'LEC' and row[10] == '3'):
             grading_component = 5
@@ -88,7 +88,6 @@ def calc_load(data):
             grading_component = 3
         else:
             grading_component = 0
-        office_hours = (float)(calc_office_hours(no_of_students))
         if row[0] in faculty:                                       #If the instructor entry is there in faculty dictionary
             if row[3] in faculty[row[0]]:                           #If the course entry respective to that instructor is in the dictionary
                 for class_component in faculty[row[0]][row[3]]:     #For each class section taught by the faculty in that course
@@ -116,8 +115,8 @@ service = build('sheets', 'v4', credentials=creds)
 
 # Call the Sheets API
 sheet = service.spreadsheets()
-result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                            range=SAMPLE_RANGE_NAME).execute()
+result = sheet.values().get(spreadsheetId=SPREADSHEET_ID,
+                            range=READ_RANGE_NAME).execute()
 values = result.get('values', [])
 if not values:
     print('No data found.')
@@ -127,9 +126,9 @@ load_list =[[1000,20], [2000], [12]]
 prep, load = calc_load(values)
 # prep = np.reshape(prep,(records,1))
 # np.reshape(load,(-1,1))
-print(prep,"\n\n\n\n\n\n\n\n",load)
-request = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range='spring 2021!R2',valueInputOption='USER_ENTERED', body={"values":prep}).execute()
+print(prep,"\n\n\n\n",load)
+request = sheet.values().update(spreadsheetId=SPREADSHEET_ID,
+                                range=WRITE_RANGE_NAME,valueInputOption='USER_ENTERED', body={"values":prep}).execute()
 #sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
   #                          range='spring 2021!R3',valueInputOption='USER_ENTERED', body={"values":load}).execute()
 
