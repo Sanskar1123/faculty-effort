@@ -43,10 +43,10 @@ def calc_office_hours(no_of_students):
 def calc_preparation(component):
     if(component == 'PRA' or component == 'TUT'):
         print("Went to if in calc_preparation")
-        preparation = 1
+        preparation = 0.5
     elif(component == 'LEC'):
         print("Went to elif in calc_preparation")
-        preparation = 1
+        preparation = 0.5
     else :
         print("Went to else in calc_preparation")
         preparation = -1
