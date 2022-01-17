@@ -15,8 +15,9 @@ creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FI
 
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1dqhR42Ml2zJUINaz3ysicH2Eo85U5BJW1-wmSI5AtzM'
-SAMPLE_RANGE_NAME = 'spring 2021!B2:N500'
+SPREADSHEET_ID = '1dqhR42Ml2zJUINaz3ysicH2Eo85U5BJW1-wmSI5AtzM'
+READ_RANGE_NAME = 'spring 2021!B2:N500'
+WRITE_RANGE_NAME = 'spring 2021!R2'
 
 
 def calc_office_hours(no_of_students):
