@@ -21,21 +21,26 @@ WRITE_RANGE_NAME = 'spring 2021!R2'
 
 
 def calc_office_hours(no_of_students):
-    if(no_of_students > 90):
-        hours_per_student = 1/4
-    elif(no_of_students <90 and no_of_students>60):
-        hours_per_student = 1/2
-    elif(no_of_students <60 and no_of_students>30):
-        hours_per_student = 3/4
+    if(no_of_students>70):
+        print("1\n")
+        hours_per_student = 0.25
+    elif(no_of_students>40):
+        print("2\n")
+        hours_per_student = 0.5
+    elif(no_of_students>20):
+        print("3\n")
+        hours_per_student = 0.75
     else:
-        hours_per_student = 1
+        print("4\n")
+        hours_per_student = 1.0
     office_hours = hours_per_student*no_of_students/14
+    print("Returning office hours for ", no_of_students, " as ", office_hours, "  ", hours_per_student, "\n\n")
     if(office_hours > 5):
         office_hours = 5
     elif(office_hours < 3/4):
-        office_hours = 3/4
-    
+        office_hours = 3/4    
     return office_hours
+
 def calc_preparation(component):
     if(component == 'PRA' or component == 'TUT'):
         print("Went to if in calc_preparation")
