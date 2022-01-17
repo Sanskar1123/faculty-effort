@@ -53,13 +53,13 @@ def calc_preparation(component):
         preparation = -1
     return preparation
 
-def calc_teaching_hours(component):
+def calc_teaching_hours(component, credits):
     if(component == 'LEC'):
         print("Went to if in calc_teaching_hours")
-        teaching_hours = 3
+        teaching_hours = credits
     elif(component == 'TUT'):
         print("Went to elif TUT in calc_teaching_hours")
-        teaching_hours = 1
+        teaching_hours = credits
     elif(component =='PRA'):
         print("Went to elif PRAC in calc_teaching_hours")
         teaching_hours = 2
