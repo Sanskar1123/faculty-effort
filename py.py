@@ -106,7 +106,7 @@ def calc_load(data):
             faculty[row[0]] = {row[3]:{row[5]:row[9]}}
             # load_on_faculty.append([(teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0)/14.0])
             # p.append([teaching_hours], [preparation], [share_factor], [office_hours], [grading_component])
-        faculuty_load = (teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0)/14.0
+        faculuty_load = (teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0*share_factor)/14.0
         p.append([teaching_hours, preparation, share_factor, office_hours, grading_component, faculuty_load])
         i+=1
     return p, load_on_faculty
