@@ -43,14 +43,17 @@ def calc_office_hours(no_of_students):
 def calc_preparation(component):
     if(component == 'PRA' or component == 'TUT'):
         print("Went to if in calc_preparation")
-        preparation = 0.5
+        preparation = 2
     elif(component == 'LEC'):
         print("Went to elif in calc_preparation")
-        preparation = 0.5
+        preparation = 2
     else :
         print("Went to else in calc_preparation")
         preparation = -1
     return preparation
+
+def calc_evaulation_time(no_of_students, component):
+    return no_of_students*(1/4)*component/14.0
 
 def calc_teaching_hours(component, credits):
     if(component == 'LEC'):
@@ -67,13 +70,23 @@ def calc_teaching_hours(component, credits):
         teaching_hours = -1
     return teaching_hours
 
+def calc_grading_component(component, credits):
+    if(component == 'LEC' and credits >= 3):
+        grading_component = 5
+    elif(component == 'LEC' and credits <= 1.5):
+        grading_component = 3
+    else:
+        grading_component = 0
+    return grading_component
+
 def calc_load(data):
     data.pop(0)
     faculty = {}
     prep = []
     load_on_faculty = []
+    indi_load = {}
     i=0
-    p = [['Teaching Hours', 'Preparation', 'Share Factor', 'Office Hours', 'Grading Component', 'Faculty Load']]
+    p = [['Teaching Hours', 'Preparation', 'Share Factor', 'Office Hours', 'Grading Component','Evaluation Time', 'Faculty Load']]
     for row in data:                                                #For each entry in the excel
         print(i)
         share_factor = ((float)(row[9]))/100
@@ -82,12 +95,9 @@ def calc_load(data):
         teaching_hours = (float)(calc_teaching_hours(row[5], credits))
         office_hours = (float)(calc_office_hours(no_of_students))
         preparation = (float)(calc_preparation(row[5]))
-        if(row[5] == 'LEC' and row[10] == '3'):
-            grading_component = 5
-        elif(row[5] == 'LEC' and row[10] == '1.5'):
-            grading_component = 3
-        else:
-            grading_component = 0
+        grading_component = (float)(calc_grading_component(row[5], credits))
+        
+        evaluation_time = (float)(calc_evaulation_time(no_of_students, grading_component))
         if row[0] in faculty:                                       #If the instructor entry is there in faculty dictionary
             if row[3] in faculty[row[0]]:                           #If the course entry respective to that instructor is in the dictionary
                 for class_component in faculty[row[0]][row[3]]:     #For each class section taught by the faculty in that course
@@ -103,13 +113,16 @@ def calc_load(data):
                 # load_on_faculty.append([(teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0)/14.0])
                 # p.append([teaching_hours], [preparation], [share_factor], [office_hours], [grading_component])
         else:
+            indi_load[row[0]] = (teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0*share_factor)/14.0
             faculty[row[0]] = {row[3]:{row[5]:row[9]}}
             # load_on_faculty.append([(teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0)/14.0])
             # p.append([teaching_hours], [preparation], [share_factor], [office_hours], [grading_component])
-        faculuty_load = (teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0*share_factor)/14.0
-        p.append([teaching_hours, preparation, share_factor, office_hours, grading_component, faculuty_load])
-        i+=1
-    return p, load_on_faculty
+        
+        faculty_load = (teaching_hours + teaching_hours*preparation)*share_factor + office_hours + (grading_component*3.0*share_factor)/14.0
+        indi_load[row[0]] += faculty_load
+        p.append([teaching_hours*share_factor, preparation*teaching_hours*share_factor, share_factor, office_hours, grading_component, evaluation_time, faculty_load])
+        i+=1    
+    return p, indi_load
 
 service = build('sheets', 'v4', credentials=creds)
 
@@ -123,12 +136,18 @@ if not values:
 # print(values[0][0],values[0][4])
 load_list =[[1000,20], [2000], [12]]
 
-prep, load = calc_load(values)
+prep, indi_load = calc_load(values)
 # prep = np.reshape(prep,(records,1))
 # np.reshape(load,(-1,1))
-print(prep,"\n\n\n\n",load)
+print(prep,"\n\n\n\n",indi_load)
 request = sheet.values().update(spreadsheetId=SPREADSHEET_ID,
                                 range=WRITE_RANGE_NAME,valueInputOption='USER_ENTERED', body={"values":prep}).execute()
+indiv = [['Faculty Name', 'Total Teaching Load']]
+fac=[]
+for faculty in indi_load:
+    indiv.append([faculty,indi_load[faculty]])
+sheet.values().update(spreadsheetId=SPREADSHEET_ID,
+                    range='spring 2021!Z2',valueInputOption='USER_ENTERED', body={"values":indiv}).execute()
 #sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
   #                          range='spring 2021!R3',valueInputOption='USER_ENTERED', body={"values":load}).execute()
 
