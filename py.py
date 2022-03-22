@@ -15,7 +15,7 @@ creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FI
 
 
 # The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = '1dqhR42Ml2zJUINaz3ysicH2Eo85U5BJW1-wmSI5AtzM'
+SPREADSHEET_ID = '1wCZdDE9r9xxWkGfQfIkSJubNReHU-VJ8'
 READ_RANGE_NAME = 'spring 2021!B2:N500'
 WRITE_RANGE_NAME = 'spring 2021!Q2'
 WRITE_TOTAL_LOAD_RANGE = 'Total Load Spring 2021!B1'
@@ -81,13 +81,13 @@ def calc_grading_component(component, credits):
     return grading_component
 
 def calc_load(data):
-    data.pop(0)
+    p = data.pop(0)
     faculty = {}
     prep = []
     load_on_faculty = []
     total_load = {}
     i=0
-    p = [['Teaching Hours', 'Preparation Hours:Teaching', 'Share Factor', 'Office Hours', 'Grading Components','Preparion Time:Grading','Evaluation Time', 'Faculty Load']]
+    # p = [['Teaching Hours', 'Preparation Hours:Teaching', 'Share Factor', 'Office Hours', 'Grading Components','Preparion Time:Grading','Evaluation Time', 'Faculty Load']]
     for row in data:                                                #For each entry in the excel
         print(i)
         share_factor = ((float)(row[9]))/100
