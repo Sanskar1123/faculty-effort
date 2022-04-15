@@ -150,10 +150,6 @@ for faculty in total_load:
 sheet.values().update(spreadsheetId=SPREADSHEET_ID,
                     range=WRITE_TOTAL_LOAD_RANGE,valueInputOption='USER_ENTERED', body={"values":indiv}).execute()
 #sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-  #                          range='spring 2021!R3',valueInputOption='USER_ENTERED', body={"values":load}).execute()
+#                          range='spring 2021!R3',valueInputOption='USER_ENTERED', body={"values":load}).execute()
 
 
-    # print('Name, Major:')
-    # for row in values:
-    #Print columns A and E, which correspond to indices 0 and 4.
-    #     print('%s, %s' % (row[0], row[4]))
